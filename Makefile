@@ -1,0 +1,3 @@
+test:
+	cd checker && go test ./...
+	cd agents && uv run pytest
