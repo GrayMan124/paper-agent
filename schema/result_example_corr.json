@@ -1,0 +1,18 @@
+{
+	"result_id": "q01:r03",
+	"status": "verified",
+	"reason": "",
+	"canonical": {
+		"title": "Attention Is All You Need",
+		"authors": [
+			"Ashish Vaswani",
+			"Noam Shazeer",
+			"Niki Parmar"
+		],
+		"year": 2017,
+		"doi": "10.48550/arXiv.1706.03762",
+		"arxiv_id": "1706.03762",
+		"venue": "NeurIPS",
+		"abstract": "placeholder abstract text"
+	}
+}
