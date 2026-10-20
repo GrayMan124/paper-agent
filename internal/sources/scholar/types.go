@@ -17,6 +17,10 @@ type ScholarConfig struct {
 	} `json:"mcpServers"`
 }
 
+type ScholarHit struct {
+	Title, Authors, Abstract, Url string
+}
+
 func configFromJSON(path string, v any) error {
 	data, err := os.ReadFile(path)
 	if err != nil {
