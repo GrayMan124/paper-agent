@@ -4,11 +4,10 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/GrayMan124/paper-agent/internal/contract"
+	"github.com/GrayMan124/paper-agent/internal/sources/scholar"
 	"log"
 	"os"
-
-	"github.com/GrayMan124/paper-agent/internal/sources/scholar"
-	// "golang.org/x/tools/go/analysis/suite/fix"
 )
 
 // const MCPPATH = "../../mcp_servers.json"
@@ -67,9 +66,19 @@ func runScholar(ctx context.Context, args []string) error {
 		return err
 	}
 	schol := scholar.Scholar{Config: scholarConf}
-	err = schol.Search(ctx, *query, *limit)
+	results, err := schol.Search(ctx, *query, *limit)
 	if err != nil {
 		return err
+	}
+	for i, res := range results {
+
+		log.Printf("RESULT %v\nTitle:%s\nAuthors:%s\nAbstract:%s\nURL:%s\n", i, res.Title, res.Authors, res.Abstract, res.Url)
+		cand, err := contract.TranslateScholarHit(i, res)
+		if err != nil {
+			log.Fatalf("Failed to create candidate with error: %v", err)
+		}
+		log.Printf("Candidate %v\nTitle:%s\nAuthors:%s\nYear:%v\nURL:%s\n\n", i, cand.Title, cand.AuthorsRaw, *cand.Year, *cand.Link)
+
 	}
 	return nil
 

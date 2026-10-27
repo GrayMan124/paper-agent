@@ -49,11 +49,9 @@ func (s Scholar) Search(ctx context.Context, query string, n int) ([]ScholarHit,
 			log.Printf("Failed to unmarshall tc")
 			continue
 		}
-		log.Printf("Appending: \n Title: %s\nAbstract: %s\nAuthors :%s\nURL: %s\n",
-			hit.Title, hit.Abstract, hit.Authors, hit.Url)
+		// log.Printf("Appending: \n Title: %s\nAbstract: %s\nAuthors :%s\nURL: %s\n",
+		// hit.Title, hit.Abstract, hit.Authors, hit.Url)
 		scholarHits = append(scholarHits, hit)
 	}
-
 	return scholarHits, nil
-
 }
