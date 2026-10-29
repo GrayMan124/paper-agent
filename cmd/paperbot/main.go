@@ -70,15 +70,26 @@ func runScholar(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
+	log.Print("ScholarResults:\n")
 	for i, res := range results {
 
 		log.Printf("RESULT %v\nTitle:%s\nAuthors:%s\nAbstract:%s\nURL:%s\n", i, res.Title, res.Authors, res.Abstract, res.Url)
-		cand, err := contract.TranslateScholarHit(i, res)
-		if err != nil {
-			log.Fatalf("Failed to create candidate with error: %v", err)
-		}
+
+	}
+
+	log.Print("Candidates:\n")
+	translatedResults, err := contract.TranslateScholarHits(results)
+	if err != nil {
+		return err
+	}
+	for i, cand := range translatedResults {
 		log.Printf("Candidate %v\nTitle:%s\nAuthors:%s\nYear:%v\nURL:%s\n\n", i, cand.Title, cand.AuthorsRaw, *cand.Year, *cand.Link)
 
+	}
+	log.Print("Saving Candidates...")
+	err = contract.SaveResultsToJSON("./results_tmp/", translatedResults)
+	if err != nil {
+		return err
 	}
 	return nil
 

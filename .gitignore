@@ -3,3 +3,4 @@ __pycache__/
 checker/checker
 mcp_servers.json
 fixtures/scholar/*
+results_tmp/*
