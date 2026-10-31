@@ -4,13 +4,14 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/GrayMan124/paper-agent/internal/contract"
-	"github.com/GrayMan124/paper-agent/internal/sources/scholar"
 	"log"
 	"os"
+
+	semanticscholar "github.com/GrayMan124/paper-agent/internal/checker/semanticScholar"
+	"github.com/GrayMan124/paper-agent/internal/contract"
+	"github.com/GrayMan124/paper-agent/internal/sources/scholar"
 )
 
-// const MCPPATH = "../../mcp_servers.json"
 const MCPPATH = "./mcp_servers.json"
 
 func main() {
@@ -31,6 +32,8 @@ func run(ctx context.Context, args []string) error {
 	switch subcommand {
 	case "scholar":
 		return runScholar(ctx, subArgs)
+	case "api":
+		return semanticscholar.SemanticScholarAPI("Attention is all")
 	default:
 		return fmt.Errorf("Unknown command: %q", subcommand)
 	}
