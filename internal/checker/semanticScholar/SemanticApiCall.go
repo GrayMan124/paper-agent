@@ -15,7 +15,7 @@ func SemanticScholarAPI(query string) error {
 	log.Printf("Seraching for %s using the URL:\n%s", query, queryUrl)
 	resp, err := http.Get(queryUrl)
 	if err != nil {
-		return err
+		log.Fatalf("Failed to make request with error: %v", err)
 	}
 	var response any
 	body, err := io.ReadAll(resp.Body)
