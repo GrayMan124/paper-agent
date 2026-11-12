@@ -85,7 +85,7 @@ Full examples are in [`schema/`](schema/).
 ### Prerequisites
 
 - Go **1.26+**
-- A Google Scholar MCP server that exposes the `search_google_scholar_key_words` tool. <!-- TODO: link the server you use -->
+- Currently this repo requires [JackKuo666/Google-Scholar-MCP-Server](https://github.com/JackKuo666/Google-Scholar-MCP-Server), which exposes the `search_google_scholar_key_words` tool.
 
 ### Configure the MCP server
 
