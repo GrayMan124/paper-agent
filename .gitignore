@@ -4,3 +4,4 @@ checker/checker
 mcp_servers.json
 fixtures/scholar/*
 results_tmp/*
+.env
