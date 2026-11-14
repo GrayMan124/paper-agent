@@ -3,10 +3,9 @@ package scholar
 import (
 	"context"
 	"encoding/json"
+	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"log"
 	"os/exec"
-
-	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
 type Scholar struct {
@@ -16,7 +15,7 @@ type Scholar struct {
 func (s Scholar) Search(ctx context.Context, query string, n int) ([]ScholarHit, error) {
 	client := mcp.NewClient(&mcp.Implementation{
 		Name:    "paperbot",
-		Version: "0.0.1",
+		Version: "0.0.2",
 	}, nil)
 	cmd := exec.Command(s.Config.McpServers.GoogleScholar.Command, s.Config.McpServers.GoogleScholar.Args...)
 	session, err := client.Connect(ctx, &mcp.CommandTransport{Command: cmd}, nil)
@@ -49,9 +48,10 @@ func (s Scholar) Search(ctx context.Context, query string, n int) ([]ScholarHit,
 			log.Printf("Failed to unmarshall tc")
 			continue
 		}
-		// log.Printf("Appending: \n Title: %s\nAbstract: %s\nAuthors :%s\nURL: %s\n",
-		// hit.Title, hit.Abstract, hit.Authors, hit.Url)
+		log.Printf("Appending: \n Title: %s\nAbstract: %s\nAuthors :%s\nURL: %s\n",
+			hit.Title, hit.Abstract, hit.Authors, hit.Url)
 		scholarHits = append(scholarHits, hit)
 	}
+	log.Printf("Check from connection.go, retrieved: %v", len(scholarHits))
 	return scholarHits, nil
 }

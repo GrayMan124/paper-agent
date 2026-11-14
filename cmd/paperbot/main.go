@@ -27,13 +27,12 @@ func main() {
 		Muc:     sync.Mutex{},
 		LastReq: time.Now(),
 	}
-	if err := run(ctx, ss, os.Args[1:]); err != nil {
+	if err := run(ctx, &ss, os.Args[1:]); err != nil {
 		log.Fatalf("Failed run with error: %v", err)
 	}
-
 }
 
-func run(ctx context.Context, semantic semanticscholar.SemanticScholarConfig, args []string) error {
+func run(ctx context.Context, semantic *semanticscholar.SemanticScholarConfig, args []string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("Expected subcommand (e.g. 'Scholar')")
 	}
@@ -43,8 +42,10 @@ func run(ctx context.Context, semantic semanticscholar.SemanticScholarConfig, ar
 	switch subcommand {
 	case "scholar":
 		return runScholar(ctx, subArgs)
-	case "api":
-		return semantic.SemanticScholarAPI("Attention is all")
+	// case "api":
+	// 	return semantic.SemanticScholarAPI("Attention is all")
+	case "search_check":
+		return runCheck(ctx, subArgs, semantic)
 	default:
 		return fmt.Errorf("Unknown command: %q", subcommand)
 	}

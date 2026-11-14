@@ -13,5 +13,6 @@ type SemanticResult struct {
 			AuthorID string `json:"authorId"`
 			Name     string `json:"name"`
 		} `json:"authors"`
+		Abstract string `json:"abstract"`
 	} `json:"data"`
 }

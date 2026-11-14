@@ -20,12 +20,12 @@ type SemanticScholarConfig struct {
 	LastReq time.Time
 }
 
-func (s SemanticScholarConfig) SemanticScholarAPI(query string) error {
+func (s SemanticScholarConfig) SemanticScholarAPI(query string) (SemanticResult, error) {
 	baseUrl := "https://api.semanticscholar.org/graph/v1/paper/search"
 
 	params := url.Values{}
 	params.Add("query", query)
-	params.Add("fields", "title,year,authors,url")
+	params.Add("fields", "title,year,authors,url,abstract")
 	params.Add("limit", "5")
 	queryUrl := fmt.Sprintf("%s?%s", baseUrl, params.Encode())
 	log.Printf("Seraching for %s using the URL:\n%s", query, queryUrl)
@@ -52,7 +52,7 @@ func (s SemanticScholarConfig) SemanticScholarAPI(query string) error {
 		resp, err = s.Client.Do(req)
 		if err != nil {
 			log.Fatalf("Failed to send the request due to error: %v", err)
-			return err
+			return SemanticResult{}, err
 		}
 		if resp.StatusCode != 200 {
 			log.Printf("Retrieved code: {%v} from semanticScholar request", resp.StatusCode)
@@ -65,14 +65,15 @@ func (s SemanticScholarConfig) SemanticScholarAPI(query string) error {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalf("Failed to read the body due to error: %v", err)
+		return SemanticResult{}, err
 	}
 	if err := json.Unmarshal(body, &response); err != nil {
 		log.Fatalf("Failed to Unmarshall response with error: %v", err)
-		return err
+		return SemanticResult{}, err
 	}
 	for i, data := range response.Data {
-		log.Printf("Data entry: {%v}\n ID: %v\nTitle:%s,URL:%v\nAuthors:%v", i, data.PaperID, data.Title, data.URL, data.Authors)
+		log.Printf("Data entry: {%v}\n ID: %v\nTitle:%s,URL:%v\nAuthors:%v\nAbstract:%s", i, data.PaperID, data.Title, data.URL, data.Authors, data.Abstract)
 	}
-	return nil
+	return response, nil
 
 }

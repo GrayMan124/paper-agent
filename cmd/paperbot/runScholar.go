@@ -68,3 +68,61 @@ func runScholar(ctx context.Context, args []string) error {
 	}
 	return nil
 }
+
+func ScholarResults(ctx context.Context, args []string) ([]contract.Candidate, error) {
+	fs := flag.NewFlagSet("scholar", flag.ContinueOnError)
+
+	query := fs.String("q", "", "Search Query")
+	limit := fs.Int("limit", 5, "Max results")
+	fixture := fs.String("fixture", "", "Path to local fixture JSON")
+
+	if err := fs.Parse(args); err != nil {
+		return nil, err
+	}
+
+	if *fixture != "" {
+		//NOTE: Temporary solution, data is skipped for now it doesn't support fixtures
+		_, err := os.ReadFile(*fixture)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if *query == "" {
+		return nil, fmt.Errorf("Missing required flag -q (Query)")
+	}
+
+	log.Printf("Searching for %s...", *query)
+	scholarConf, err := scholar.BuildConfig(MCPPATH)
+	if err != nil {
+		return nil, err
+	}
+	schol := scholar.Scholar{Config: scholarConf}
+	results, err := schol.Search(ctx, *query, *limit)
+	log.Printf("Retrieved: %v results from schol.Search", len(results))
+	if err != nil {
+		return nil, err
+	}
+	log.Print("ScholarResults:\n")
+	for i, res := range results {
+
+		log.Printf("RESULT %v\nTitle:%s\nAuthors:%s\nAbstract:%s\nURL:%s\n", i, res.Title, res.Authors, res.Abstract, res.Url)
+
+	}
+
+	log.Print("Candidates:\n")
+	translatedResults, err := contract.TranslateScholarHits(results)
+	if err != nil {
+		return nil, err
+	}
+	// for i, cand := range translatedResults {
+	// 	log.Printf("Candidate %v\nTitle:%s\nAuthors:%s\nYear:%v\nURL:%s\n\n", i, cand.Title, cand.AuthorsRaw, *cand.Year, *cand.Link)
+	//
+	// }
+	log.Print("Saving Candidates...")
+	err = contract.SaveResultsToJSON("./results_tmp/", translatedResults)
+	if err != nil {
+		return nil, err
+	}
+	return translatedResults, nil
+}
