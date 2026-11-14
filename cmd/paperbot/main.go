@@ -4,7 +4,10 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
+	"sync"
+	"time"
 
 	semanticscholar "github.com/GrayMan124/paper-agent/internal/checker/semanticScholar"
 	"github.com/joho/godotenv"
@@ -18,7 +21,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to load enviorment: %v", err)
 	}
-	ss := semanticscholar.SemanticScholarConfig{API_KEY: os.Getenv("SEMANTIC_API")}
+	ss := semanticscholar.SemanticScholarConfig{
+		API_KEY: os.Getenv("SEMANTIC_API"),
+		Client:  &http.Client{},
+		Muc:     sync.Mutex{},
+		LastReq: time.Now(),
+	}
 	if err := run(ctx, ss, os.Args[1:]); err != nil {
 		log.Fatalf("Failed run with error: %v", err)
 	}
