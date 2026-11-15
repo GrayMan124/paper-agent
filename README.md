@@ -1,6 +1,13 @@
 # paper-agent
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+<div align="center">
+  <a href="https://www.aihonestybadge.com">
+    <img src="https://www.aihonestybadge.com/badges/no-ai-small.svg" alt="No AI">
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
+  </a>
+</div>
 
 **A Go pipeline that finds academic papers and checks that they exist before anyone cites them.**
 
