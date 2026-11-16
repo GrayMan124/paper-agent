@@ -2,7 +2,7 @@
 
 <div align="center">
   <a href="https://www.aihonestybadge.com">
-    <img src="https://www.aihonestybadge.com/badges/no-ai-small.svg" alt="No AI">
+    <img src="https://www.aihonestybadge.com/badges/ai-assisted-small.svg" alt="AI Assisted">
   </a>
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
