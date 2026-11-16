@@ -48,8 +48,9 @@ func (s Scholar) Search(ctx context.Context, query string, n int) ([]ScholarHit,
 			log.Printf("Failed to unmarshall tc")
 			continue
 		}
-		log.Printf("Appending: \n Title: %s\nAbstract: %s\nAuthors :%s\nURL: %s\n",
-			hit.Title, hit.Abstract, hit.Authors, hit.Url)
+		//NOTE: Print debuging
+		// log.Printf("Appending: \n Title: %s\nAbstract: %s\nAuthors :%s\nURL: %s\n",
+		// 	hit.Title, hit.Abstract, hit.Authors, hit.Url)
 		scholarHits = append(scholarHits, hit)
 	}
 	log.Printf("Check from connection.go, retrieved: %v", len(scholarHits))

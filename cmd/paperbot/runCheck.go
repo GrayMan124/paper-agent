@@ -19,6 +19,7 @@ func runCheck(ctx context.Context, args []string, semSearch *semanticscholar.Sem
 	for i, cand := range candidates {
 		log.Printf("Candidate: %v\nTitle:%s\nAuthors:%s\nYear:%v\nURL:%s\n\n", i, cand.Title, cand.AuthorsRaw, *cand.Year, *cand.Link)
 	}
+	//NOTE: I think it would be good if the LLM agent responsible for seraching could check the results here before passing them into contract checking
 
 	results, err := checker.CheckScholarResults(candidates, semSearch)
 
@@ -27,7 +28,7 @@ func runCheck(ctx context.Context, args []string, semSearch *semanticscholar.Sem
 	}
 
 	for _, res := range results {
-		log.Printf("ResultID: %v\nStatus:%s\nReason:%s\nTitle:%s\nAbstract:%s\n\n", res.ResultID, res.Status, res.Reason, res.Canonical.Title, *res.Canonical.Abstract)
+		log.Printf("ResultID: %v\nStatus:%s\nReason:%s\nTitle:%s\n\n", res.ResultID, res.Status, res.Reason, res.Canonical.Title)
 	}
 	return nil
 }
