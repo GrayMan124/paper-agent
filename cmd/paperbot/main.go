@@ -10,6 +10,7 @@ import (
 	"time"
 
 	semanticscholar "github.com/GrayMan124/paper-agent/internal/checker/semanticScholar"
+	"github.com/GrayMan124/paper-agent/internal/sources/scholar"
 	"github.com/joho/godotenv"
 )
 
@@ -27,12 +28,16 @@ func main() {
 		Muc:     sync.Mutex{},
 		LastReq: time.Now(),
 	}
-	if err := run(ctx, &ss, os.Args[1:]); err != nil {
-		log.Fatalf("Failed run with error: %v", err)
+	// Preparing google scholar
+	gsc, err := scholar.BuildConfig("./mcp_servers.json")
+	schol := scholar.Scholar{Config: gsc}
+	if err := run(ctx, &ss, schol, os.Args[1:]); err != nil {
+		log.Fatalf("Failed create google scholar with error: %v", err)
 	}
+
 }
 
-func run(ctx context.Context, semantic *semanticscholar.SemanticScholarConfig, args []string) error {
+func run(ctx context.Context, semantic *semanticscholar.SemanticScholarConfig, schol scholar.Scholar, args []string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("Expected subcommand (e.g. 'Scholar')")
 	}
@@ -41,11 +46,11 @@ func run(ctx context.Context, semantic *semanticscholar.SemanticScholarConfig, a
 	subArgs := args[1:]
 	switch subcommand {
 	case "scholar":
-		return runScholar(ctx, subArgs)
+		return runScholar(ctx, subArgs, schol)
 	// case "api":
 	// 	return semantic.SemanticScholarAPI("Attention is all")
 	case "search_check":
-		return runCheck(ctx, subArgs, semantic)
+		return runCheck(ctx, subArgs, semantic, schol)
 	default:
 		return fmt.Errorf("Unknown command: %q", subcommand)
 	}

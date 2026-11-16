@@ -2,13 +2,15 @@ package main
 
 import (
 	"context"
+	"log"
+
 	"github.com/GrayMan124/paper-agent/internal/checker"
 	semanticscholar "github.com/GrayMan124/paper-agent/internal/checker/semanticScholar"
-	"log"
+	"github.com/GrayMan124/paper-agent/internal/sources/scholar"
 )
 
-func runCheck(ctx context.Context, args []string, semSearch *semanticscholar.SemanticScholarConfig) error {
-	candidates, err := ScholarResults(ctx, args)
+func runCheck(ctx context.Context, args []string, semSearch *semanticscholar.SemanticScholarConfig, schol scholar.Scholar) error {
+	candidates, err := ScholarResults(schol, ctx, args)
 	log.Printf("Number of candidates retrieved: %v", len(candidates))
 	if err != nil {
 		return err

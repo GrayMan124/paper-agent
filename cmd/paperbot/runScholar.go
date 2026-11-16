@@ -12,7 +12,7 @@ import (
 
 const MCPPATH = "./mcp_servers.json"
 
-func runScholar(ctx context.Context, args []string) error {
+func runScholar(ctx context.Context, args []string, gs scholar.Scholar) error {
 	fs := flag.NewFlagSet("scholar", flag.ContinueOnError)
 
 	query := fs.String("q", "", "Search Query")
@@ -34,14 +34,9 @@ func runScholar(ctx context.Context, args []string) error {
 	if *query == "" {
 		return fmt.Errorf("Missing required flag -q (Query)")
 	}
-
 	log.Printf("Searching for %s...", *query)
-	scholarConf, err := scholar.BuildConfig(MCPPATH)
-	if err != nil {
-		return err
-	}
-	schol := scholar.Scholar{Config: scholarConf}
-	results, err := schol.Search(ctx, *query, *limit)
+
+	results, err := gs.Search(ctx, *query, *limit)
 	if err != nil {
 		return err
 	}
@@ -69,7 +64,7 @@ func runScholar(ctx context.Context, args []string) error {
 	return nil
 }
 
-func ScholarResults(ctx context.Context, args []string) ([]contract.Candidate, error) {
+func ScholarResults(schol scholar.Scholar, ctx context.Context, args []string) ([]contract.Candidate, error) {
 	fs := flag.NewFlagSet("scholar", flag.ContinueOnError)
 
 	query := fs.String("q", "", "Search Query")
@@ -91,13 +86,8 @@ func ScholarResults(ctx context.Context, args []string) ([]contract.Candidate, e
 	if *query == "" {
 		return nil, fmt.Errorf("Missing required flag -q (Query)")
 	}
-
 	log.Printf("Searching for %s...", *query)
-	scholarConf, err := scholar.BuildConfig(MCPPATH)
-	if err != nil {
-		return nil, err
-	}
-	schol := scholar.Scholar{Config: scholarConf}
+
 	results, err := schol.Search(ctx, *query, *limit)
 	log.Printf("Retrieved: %v results from schol.Search", len(results))
 	if err != nil {
@@ -115,10 +105,6 @@ func ScholarResults(ctx context.Context, args []string) ([]contract.Candidate, e
 	if err != nil {
 		return nil, err
 	}
-	// for i, cand := range translatedResults {
-	// 	log.Printf("Candidate %v\nTitle:%s\nAuthors:%s\nYear:%v\nURL:%s\n\n", i, cand.Title, cand.AuthorsRaw, *cand.Year, *cand.Link)
-	//
-	// }
 	log.Print("Saving Candidates...")
 	err = contract.SaveResultsToJSON("./results_tmp/", translatedResults)
 	if err != nil {
